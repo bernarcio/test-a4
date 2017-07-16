@@ -6,7 +6,7 @@
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
 public class Percolation {
-    private final WeightedQuickUnionUF grid;   // WeightedQuickUnionUF type grid
+    private final WeightedQuickUnionUF grid, auxGrid;   // WeightedQuickUnionUF type grid
     private boolean[] status;     // status for each site, true for open, flase block
     private int openCnt;
     private final int lineCnt; // num of row/col
@@ -129,6 +129,7 @@ public class Percolation {
      *
      */
     public boolean isFull(int row, int col) {
+        if (!isOpen(row, col)) return false; // can avoid OperationCountLimitExceededException
         int idx = findIndex(row, col);
         return auxGrid.connected(idx, 0); // is connected with grid[0]
     }
