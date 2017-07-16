@@ -6,10 +6,10 @@
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
 public class Percolation {
-    private WeightedQuickUnionUF grid;   // WeightedQuickUnionUF type grid
+    private final WeightedQuickUnionUF grid;   // WeightedQuickUnionUF type grid
     private boolean[] status;     // status for each site, true for open, flase block
     private int openCnt;
-    private int lineCnt; // num of row/col
+    private final int lineCnt; // num of row/col
 
     /**
      * Initializes a system with {@code n * n} sites
@@ -24,19 +24,18 @@ public class Percolation {
 
         int count = n * n;
         lineCnt = n;
-        grid = new WeightedQuickUnionUF(count + 2);// two virtual sites at the top and bottom, respectively.
+        grid = new WeightedQuickUnionUF(count + 2); // two virtual sites at the top and bottom, respectively.
 
         status = new boolean[count + 2];
         for (int i = 0; i < count +1; i++) {
             status[i] = false;
         }
 
-        //open the virtual sites
+        // open the virtual sites
         status[0] = true;
         status[count+1] = true;
         openCnt = 0;
     }
-
 
     /**
      * find index of of site
@@ -99,9 +98,9 @@ public class Percolation {
         int idx = findIndex(row, col);
         status[idx] = true;
         openCnt++;
-        tryNeighbours(row, col, idx); //check neighbours sites, connect if they are already open.
+        tryNeighbours(row, col, idx); // check neighbours sites, connect if they are already open.
 
-        //check if from top/bottom
+        // check if from top/bottom
         if (isTopSite(idx)) grid.union(idx, 0);
 
         if (isBottomSite(idx)) grid.union(idx, status.length-1);
@@ -122,7 +121,7 @@ public class Percolation {
      */
     public boolean isFull(int row, int col) {
         int idx = findIndex(row, col);
-        return grid.connected(idx, 0); //is connected with grid[0]
+        return grid.connected(idx, 0); // is connected with grid[0]
     }
 
     /**
@@ -138,6 +137,6 @@ public class Percolation {
      *
      */
     public boolean percolates() {
-        return grid.connected(0,status.length-1);
+        return grid.connected(0, status.length-1);
     }
 }
