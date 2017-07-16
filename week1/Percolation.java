@@ -25,6 +25,7 @@ public class Percolation {
         int count = n * n;
         lineCnt = n;
         grid = new WeightedQuickUnionUF(count + 2); // two virtual sites at the top and bottom, respectively.
+        auxGrid = new WeightedQuickUnionUF(count + 1); //  virtual sites at the top
 
         status = new boolean[count + 2];
         for (int i = 0; i < count +1; i++) {
@@ -73,17 +74,21 @@ public class Percolation {
     private  void tryNeighbours(int row, int col, int idx) {
         if (row != 1 && isOpen(row-1, col)) {
             grid.union(idx, findIndex(row-1, col));
+            auxGrid.union(idx, findIndex(row-1, col));
         }
 
         if (row != lineCnt && isOpen(row+1, col)) {
             grid.union(idx, findIndex(row+1, col));
+            auxGrid.union(idx, findIndex(row+1, col));
         }
         if (col != 1 && isOpen(row, col-1)) {
             grid.union(idx, findIndex(row, col-1));
+            auxGrid.union(idx, findIndex(row, col-1));
         }
 
         if (col != lineCnt && isOpen(row, col + 1)) {
             grid.union(idx, findIndex(row, col+1));
+            auxGrid.union(idx, findIndex(row, col+1));
         }
 
     }
@@ -101,9 +106,13 @@ public class Percolation {
         tryNeighbours(row, col, idx); // check neighbours sites, connect if they are already open.
 
         // check if from top/bottom
-        if (isTopSite(idx)) grid.union(idx, 0);
-
-        if (isBottomSite(idx)) grid.union(idx, status.length-1);
+        if (isTopSite(idx)) {
+            grid.union(idx, 0);
+            auxGrid.union(idx, 0);
+        }
+        if (isBottomSite(idx)) {
+            grid.union(idx, status.length-1);
+        }
     }
 
     /**
@@ -121,7 +130,7 @@ public class Percolation {
      */
     public boolean isFull(int row, int col) {
         int idx = findIndex(row, col);
-        return grid.connected(idx, 0); // is connected with grid[0]
+        return auxGrid.connected(idx, 0); // is connected with grid[0]
     }
 
     /**
