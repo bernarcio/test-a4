@@ -3,88 +3,131 @@
  *
  ******************************************************************************/
 
-//import edu.princeton.cs.algs4.WeightedQuickUnionUF;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 public class Deque<Item> implements Iterable<Item> {
 
-    // private final WeightedQuickUnionUF grid;   // WeightedQuickUnionUF type grid
-    // private boolean[] status;     // status for each site, true for open, flase block
-    // private int openCnt;
-    // private final int lineCnt; // num of row/col
+    private Node<Item> first;
+    private Node<Item> last;
+    private final int n; // num of item
+
+    private static class Node<Item>{
+        private Item item;
+        private Node<Item> next;
+        private Node<Item> prev;
+    } // num of item
 
     /**
-     * Initializes a system with {@code n * n} sites
-     * {@code 0} through {@code n *n-1}. Each site is initially blocked.
-     *
-     * @param  n the number of sites
-     * @throws IllegalArgumentException if {@code n < 0}
+     * constructor
      */
     public Deque() {
-        // constructor
+        first = null;
+        last  = null;
+        n = 0;
     }
 
     /**
-     * find index of of site
-     *
-     */
-    private int findIndex(int row, int col) {
-
-        if (row <= 0 || row > lineCnt)
-        throw new IllegalArgumentException("Invalid Arguments");
-
-        if (col <= 0 || col > lineCnt)
-        throw new IllegalArgumentException("Invalid Arguments");
-
-        return ((row-1) * lineCnt + col);
-    }
-
-    /**
-     * top site check
+     * empty check
      */
     public  boolean isEmpty() {
-        //return (idx <= lineCnt);
+        return (first == null);
     }
 
     /**
-     * Bottom site check
+     * size
      */
     private  int size () {
-        //return (idx >= (lineCnt-1) * lineCnt +1);
+        return n;
     }
 
     /**
-     * add first item
+     * add item to the front
      */
     public void addFirst(Item item) {
+        if (null == item
+        throw new java.lang.NullPointerException("item is null!!!");
 
+        Node<Item> oldfist = first;
+        first = new Node<item>();
+        first.item = item;
+
+        oldfirst.prev = first;
+        first.next = oldfirst;
+        // first.prev = null;
+        n++;
     }
 
     /**
-     * add last item
+     * additem to last
      */
     public void addLast(Item item) {
+        if (null == item
+        throw new java.lang.NullPointerException("item is null!!!");
+
+        Node<Item> oldlast = last;
+        last = new Node<item>();
+        last.item = item;
+
+        oldlast.next = last;
+        last.prev = oldlast;
+        // last.next = null;
+        n++;
 
     }
 
     /**
-     * remove first item
+     * remove item from front
      */
     public Item removeFirst() {
+        // need not to be empty!!!
+        if (isEmpty())
+        throw new java.util.NoSuchElementException("Deque empty");
+
+        Item item = first.item;
+        first = first.next;
+        first.prev = null;
+        n--;
+        return item;
 
     }
 
     /**
-     * remove last item
+     * remove item from last
      */
     public void removeLast() {
+        if (isEmpty())
+        throw new java.util.NoSuchElementException("Deque empty");
 
+        Item item = first.item;
+        last = last.prev;
+        last.next = null;
+        n--;
     }
     /**
-     * Open site (row, col) if it is not yet open
-     *
+     * iterator
      */
     public Iterator<Item> iterator() {
-        //if (isOpen(row, col)) return;
+        return new ListIterator<Item>(first);
+    }
+    private class ListIterator<Item> implements Iterator<Item>{
 
+        private Node<Item> current;
+
+        public ListIterator(Node<Item> first){
+            current = first;
+        }
+        public boolean hasNext(){
+            return curent != null;
+        }
+        public void remove() {
+            throw new UnsupportedOperationException();
+        }
+        public Item next() {
+            if(!hasNext()) throw new NoSuchElementException();
+            Item item = current.item;
+            current = current.next;
+            return item;
+        }
     }
 }
